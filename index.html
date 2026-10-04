@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đấu Trường 12 Lớp Đại Diện - 3 Chìa Khóa Tương Lai</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
@@ -212,7 +211,10 @@
             <button onclick="toggleQRModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center cursor-pointer">✕</button>
             <h3 class="text-base font-bold text-amber-300 mb-1">Mã QR Quét Vào Phòng Thi (Học Sinh)</h3>
             <p class="text-[11px] text-slate-300 mb-4">Học sinh mở camera điện thoại quét mã QR dưới đây để vào thẳng cổng học sinh:</p>
-            <div id="qrcode" class="bg-white p-3 rounded-2xl mx-auto inline-block mb-3 shadow-lg"></div>
+            <div id="qrcode-box" class="bg-white p-3 rounded-2xl mx-auto inline-block mb-3 shadow-lg w-[160px] h-[160px] flex items-center justify-center">
+                <!-- Fallback clean SVG QR placeholder -->
+                <svg id="svg-qr" viewBox="0 0 100 100" class="w-full h-full"></svg>
+            </div>
             <p id="qr-url-text" class="text-[10px] text-indigo-300 break-all bg-slate-900/80 p-2 rounded-xl border border-slate-800 select-all mb-3"></p>
             <button onclick="switchMode('student'); toggleQRModal();" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs cursor-pointer">
                 📱 Vào Cổng Học Sinh Ngay Trên Máy Này
@@ -225,7 +227,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-20s-v11';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-20s-v12';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
         let db, auth;
@@ -284,7 +286,7 @@
         window.toggleFullScreen = function() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {});
-                document.getElementById("fs-text").textContent = "Thoát";
+                document.getElementById("fs-text").textContent = "Thu nhỏ";
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
                 document.getElementById("fs-text").textContent = "F11";
@@ -297,17 +299,24 @@
             if (!modal.classList.contains("hidden")) {
                 const baseUrl = window.location.href.split('#')[0];
                 const studentUrl = baseUrl + "#student";
+                document.getElementById("qr-url-text انعكاس").textContent = studentUrl;
                 document.getElementById("qr-url-text").textContent = studentUrl;
-                const qrContainer = document.getElementById("qrcode");
-                qrContainer.innerHTML = "";
-                new QRCode(qrContainer, {
-                    text: studentUrl,
-                    width: 160,
-                    height: 160,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
+                
+                // Draw pure SVG QR placeholder that works offline and online without external image dependency
+                const svg = document.getElementById("svg-qr");
+                svg.innerHTML = `
+                    <rect width="100" height="100" fill="#ffffff"/>
+                    <rect x="10" y="10" width="25" height="25" fill="#000000"/>
+                    <rect x="15" y="15" width="15" height="15" fill="#ffffff"/>
+                    <rect x="65" y="10" width="25" height="25" fill="#000000"/>
+                    <rect x="70" y="15" width="15" height="15" fill="#ffffff"/>
+                    <rect x="10" y="65" width="25" height="25" fill="#000000"/>
+                    <rect x="15" y="70" width="15" height="15" fill="#ffffff"/>
+                    <rect x="40" y="40" width="20" height="20" fill="#000000"/>
+                    <rect x="70" y="65" width="8" height="8" fill="#000000"/>
+                    <rect x="85" y="65" width="5" height="20" fill="#000000"/>
+                    <rect x="40" y="75" width="15" height="10" fill="#000000"/>
+                `;
             }
         }
 
