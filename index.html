@@ -89,11 +89,14 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 max-h-36 overflow-y-auto p-1 bg-slate-900/60 rounded-xl border border-slate-800" id="preview-classes">
                     <!-- Injected via JS -->
                 </div>
-                <div class="flex justify-center gap-3">
+                <div class="flex flex-wrap justify-center gap-3">
                     <button onclick="toggleQRModal()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow transition text-xs cursor-pointer">
                         📷 Hiển Thị Mã QR Cho HS Quét
                     </button>
-                    <button onclick="startTeacherGame()" class="px-8 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 text-slate-950 font-extrabold rounded-xl shadow-xl transition text-xs tracking-wide cursor-pointer">
+                    <button onclick="switchToStudentMode()" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-amber-300 border border-amber-500/40 font-bold rounded-xl shadow transition text-xs cursor-pointer">
+                        📱 Chuyển Sang Cổng Học Sinh
+                    </button>
+                    <button onclick="startTeacherGame()" class="px-8 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 text-slate-950 font-extrabold rounded-xl shadow-xl transition text-xs tracking-wide cursor-pointer">
                         BẮT ĐẦU ĐẤU TRƯỜNG 🚀
                     </button>
                 </div>
@@ -174,8 +177,11 @@
                         <!-- Options injected via JS -->
                     </select>
                 </div>
-                <button onclick="studentJoin()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-extrabold rounded-xl text-xs shadow cursor-pointer">
+                <button onclick="studentJoin()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-extrabold rounded-xl text-xs shadow cursor-pointer mb-2">
                     VÀO PHÒNG THI 🎯
+                </button>
+                <button onclick="switchToTeacherMode()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs cursor-pointer border border-slate-700">
+                    ⬅ Quay lại màn hình Giáo viên
                 </button>
             </div>
 
@@ -207,7 +213,10 @@
             <h3 class="text-base font-bold text-amber-300 mb-1">Mã QR Quét Vào Phòng Thi</h3>
             <p class="text-[11px] text-slate-300 mb-4">Học sinh mở camera điện thoại quét mã QR dưới đây để tham gia bấm đáp án:</p>
             <div id="qrcode" class="bg-white p-3 rounded-2xl mx-auto inline-block mb-3 shadow-lg"></div>
-            <p id="qr-url-text" class="text-[10px] text-indigo-300 break-all bg-slate-900/80 p-2 rounded-xl border border-slate-800 select-all"></p>
+            <p id="qr-url-text" class="text-[10px] text-indigo-300 break-all bg-slate-900/80 p-2 rounded-xl border border-slate-800 select-all mb-3"></p>
+            <button onclick="switchToStudentMode(); toggleQRModal();" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs cursor-pointer">
+                📱 Vào Cổng Học Sinh Ngay Trên Máy Này
+            </button>
         </div>
     </div>
 
@@ -286,7 +295,9 @@
             const modal = document.getElementById("qr-modal");
             modal.classList.toggle("hidden");
             if (!modal.classList.contains("hidden")) {
-                const studentUrl = window.location.origin + window.location.pathname + "#student";
+                const baseUrl = window.location.href.split('#')[0];
+                const studentUrl = baseUrl + "#student";
+                document.getElementById("qr-url-textミュニ").textContent = studentUrl;
                 document.getElementById("qr-url-text").textContent = studentUrl;
                 const qrContainer = document.getElementById("qrcode");
                 qrContainer.innerHTML = "";
@@ -299,6 +310,16 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
+        }
+
+        window.switchToStudentMode = function() {
+            window.location.hash = "student";
+            initAppMode();
+        }
+
+        window.switchToTeacherMode = function() {
+            window.location.hash = "";
+            initAppMode();
         }
 
         function playBeep(freq = 600, dur = 0.08) {
@@ -364,7 +385,7 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
@@ -390,7 +411,7 @@
 
         async function syncGameState() {
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
                 await setDoc(docRef, gameState);
             }
             updateTeacherUI();
@@ -570,7 +591,7 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
@@ -594,7 +615,7 @@
             if (!selectedStudentClass || gameState.status !== 'answering') return;
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
                 const timestamp = Date.now();
                 gameState.answers[selectedStudentClass] = { option: optionIdx, time: timestamp };
                 
@@ -612,7 +633,7 @@
             const stQuiz = document.getElementById("student-quiz");
             if (stQuiz.classList.contains("hidden")) return;
 
-            document.getElementById("st-timer").textContent = `⏱️️ ${gameState.timeLeft}s`;
+            document.getElementById("st-timer").textContent = `⏱ ${gameState.timeLeft}s`;
             const banner = document.getElementById("st-status-banner");
             const optContainer = document.getElementById("st-options-container");
             const feedback = document.getElementById("st-feedback");
