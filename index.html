@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đấu Trường 12 Lớp Đại Diện - 3 Chìa Khóa Tương Lai (Tự Động & Tốc Độ)</title>
+    <title>Đấu Trường 12 Lớp Đại Diện - 3 Chìa Khóa Tương Lai (20s + Cloud Sync + QR)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
         </div>
         <div>
             <span class="bg-amber-500/20 text-amber-300 text-[11px] font-semibold px-3 py-0.5 rounded-full uppercase tracking-widest border border-amber-500/30">
-                Đấu Trường 12 Lớp Đại Diện • Tốc Độ & Tự Động
+                Đấu Trường 12 Lớp Đại Diện • 20s Đọc & 20s Trả Lời
             </span>
             <h1 class="text-base md:text-lg font-extrabold mt-0.5 tracking-tight bg-gradient-to-r from-amber-300 via-yellow-200 to-emerald-300 bg-clip-text text-transparent">
                 3 CHÌA KHÓA TƯƠNG LAI
@@ -84,8 +84,8 @@
                 <div class="w-12 h-12 bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-400/40 text-amber-300 text-lg font-bold shadow-lg animate-pulse">
                     🏆
                 </div>
-                <h2 class="text-lg md:text-xl font-bold mb-1">Phòng Thi Đấu Tốc Độ Tự Động</h2>
-                <p class="text-xs text-slate-300 mb-3">Học sinh quét mã QR bằng điện thoại để tham gia. Trả lời đúng VÀ nhanh hơn sẽ được cộng điểm thưởng tốc độ. Hết giờ hệ thống tự chuyển câu!</p>
+                <h2 class="text-lg md:text-xl font-bold mb-1">Phòng Thi Đấu Tốc Độ Đám Mây</h2>
+                <p class="text-xs text-slate-300 mb-3">Học sinh quét mã QR bằng điện thoại để tham gia. Mỗi câu có 20s đọc câu hỏi và 20s bấm trả lời (Càng nhanh điểm thưởng càng cao!).</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 max-h-36 overflow-y-auto p-1 bg-slate-900/60 rounded-xl border border-slate-800" id="preview-classes">
                     <!-- Injected via JS -->
                 </div>
@@ -107,9 +107,9 @@
                             Câu hỏi 1 / 12
                         </span>
                         <div class="flex items-center gap-2">
-                            <span id="phase-status" class="text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded-md border border-indigo-700">📖 Đang đọc câu hỏi</span>
+                            <span id="phase-status" class="text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded-md border border-indigo-700">📖 Đang đọc câu hỏi (20s)</span>
                             <div id="timer-box" class="flex items-center gap-1 text-amber-300 font-bold bg-amber-950/60 px-2.5 py-0.5 rounded-lg border border-amber-800/50 text-xs">
-                                ⏱️ <span id="timer">10</span>s
+                                ⏱️ <span id="timer">20</span>s
                             </div>
                         </div>
                     </div>
@@ -183,10 +183,10 @@
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <span id="st-class-badge" class="text-[10px] bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">Lớp --</span>
-                        <span id="st-timer" class="text-xs font-bold text-amber-300">⏱ 10s</span>
+                        <span id="st-timer" class="text-xs font-bold text-amber-300">⏱ 20s</span>
                     </div>
                     <div id="st-status-banner" class="bg-indigo-950/80 border border-indigo-700 p-2.5 rounded-xl text-center text-xs font-semibold text-indigo-200 mb-3">
-                        Đang chờ Thầy chuyển câu hỏi...
+                        Đang chuẩn bị câu hỏi...
                     </div>
                 </div>
 
@@ -216,7 +216,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-auto-v1';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-20s-v3';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
         let db, auth, currentUser;
@@ -253,8 +253,8 @@
 
         let gameState = {
             currentQuestion: 0,
-            status: 'waiting', // waiting, reading (10s), answering (10s), revealed, ended
-            timeLeft: 10,
+            status: 'waiting', // waiting, reading (20s), answering (20s), revealed, ended
+            timeLeft: 20,
             scores: {},
             answers: {}, // { classId: { option: idx, time: timestamp } }
             latestLog: "Đang chờ bắt đầu đấu trường..."
@@ -364,7 +364,7 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
@@ -376,10 +376,10 @@
 
         window.startTeacherGame = async function() {
             gameState.currentQuestion = 0;
-            gameState.status = 'reading'; // 10s đọc câu hỏi
-            gameState.timeLeft = 10;
+            gameState.status = 'reading'; // 20s đọc câu hỏi
+            gameState.timeLeft = 20;
             gameState.answers = {};
-            gameState.latestLog = "Thầy giáo bắt đầu vòng thi! Đang trong 10s đọc câu hỏi.";
+            gameState.latestLog = "Thầy giáo bắt đầu vòng thi! Đang trong 20s đọc câu hỏi.";
             classesList.forEach(c => { gameState.scores[c.id] = 0; });
 
             await syncGameState();
@@ -390,7 +390,7 @@
 
         async function syncGameState() {
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
                 await setDoc(docRef, gameState);
             }
             updateTeacherUI();
@@ -403,8 +403,8 @@
                     gameState.timeLeft--;
                     if (gameState.timeLeft <= 0) {
                         gameState.status = 'answering';
-                        gameState.timeLeft = 10;
-                        gameState.latestLog = "Bắt đầu 10s suy nghĩ và bấm đáp án trên điện thoại!";
+                        gameState.timeLeft = 20;
+                        gameState.latestLog = "Bắt đầu 20s suy nghĩ và bấm đáp án trên điện thoại!";
                     }
                     await syncGameState();
                 } else if (gameState.status === 'answering') {
@@ -413,9 +413,8 @@
                         gameState.timeLeft = 0;
                         gameState.status = 'revealed';
                         calculateSpeedScores();
-                        gameState.latestLog = "Hết giờ 10s! Đã tự động chấm điểm tốc độ và công bố đáp án.";
+                        gameState.latestLog = "Hết giờ 20s! Đã tự động chấm điểm tốc độ và công bố đáp án.";
                         
-                        // Sau 5 giây hiển thị đáp án, tự động chuyển sang câu hỏi tiếp theo
                         setTimeout(async () => {
                             if (gameState.status === 'revealed') {
                                 gameState.currentQuestion++;
@@ -423,9 +422,9 @@
                                     gameState.status = 'ended';
                                 } else {
                                     gameState.status = 'reading';
-                                    gameState.timeLeft = 10;
+                                    gameState.timeLeft = 20;
                                     gameState.answers = {};
-                                    gameState.latestLog = `Chuyển sang câu hỏi ${gameState.currentQuestion + 1}. Đang đọc câu hỏi!`;
+                                    gameState.latestLog = `Chuyển sang câu hỏi ${gameState.currentQuestion + 1}. Đang đọc câu hỏi (20s)!`;
                                     startTeacherTimer();
                                 }
                                 await syncGameState();
@@ -451,9 +450,9 @@
 
             correctSubmissions.forEach((sub, rank) => {
                 let bonus = 10;
-                if (rank === 0) bonus = 15; // Nhanh nhất
-                else if (rank === 1) bonus = 13; // Nhanh nhì
-                else if (rank === 2) bonus = 12; // Nhanh ba
+                if (rank === 0) bonus = 15;
+                else if (rank === 1) bonus = 13;
+                else if (rank === 2) bonus = 12;
                 
                 gameState.scores[sub.id] = (gameState.scores[sub.id] || 0) + bonus;
             });
@@ -503,10 +502,10 @@
 
                 const phaseStatus = document.getElementById("phase-status");
                 if (gameState.status === 'reading') {
-                    phaseStatus.textContent = "📖 10s Đọc câu hỏi";
+                    phaseStatus.textContent = "📖 20s Đọc câu hỏi";
                     phaseStatus.className = "text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded-md border border-indigo-700";
                 } else if (gameState.status === 'answering') {
-                    phaseStatus.textContent = "⚡ 10s Điện thoại bấm đáp án (Tốc độ)";
+                    phaseStatus.textContent = "⚡ 20s Điện thoại bấm đáp án (Tốc độ)";
                     phaseStatus.className = "text-[10px] bg-amber-900 text-amber-200 px-2 py-0.5 rounded-md border border-amber-700 animate-pulse";
                 } else {
                     phaseStatus.textContent = "⌛ Hết giờ - Tự động chuyển câu sau 5s";
@@ -571,11 +570,13 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
-                        updateStudentUI();
+                        if (selectedStudentClass) {
+                            updateStudentUI();
+                        }
                     }
                 });
             }
@@ -593,7 +594,7 @@
             if (!selectedStudentClass || gameState.status !== 'answering') return;
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'gamestate', 'current');
                 const timestamp = Date.now();
                 gameState.answers[selectedStudentClass] = { option: optionIdx, time: timestamp };
                 
@@ -611,7 +612,7 @@
             const stQuiz = document.getElementById("student-quiz");
             if (stQuiz.classList.contains("hidden")) return;
 
-            document.getElementById("st-timer").textContent = `⏱️ ${gameState.timeLeft}s`;
+            document.getElementById("st-timer").textContent = `⏱️️ ${gameState.timeLeft}s`;
             const banner = document.getElementById("st-status-banner");
             const optContainer = document.getElementById("st-options-container");
             const feedback = document.getElementById("st-feedback");
@@ -621,11 +622,11 @@
                 optContainer.innerHTML = "";
                 feedback.classList.add("hidden");
             } else if (gameState.status === 'reading') {
-                banner.textContent = `📖 Đang đọc câu hỏi ${gameState.currentQuestion + 1}. Hãy tập trung nghe câu hỏi!`;
+                banner.textContent = `📖 Đang đọc câu hỏi ${gameState.currentQuestion + 1} (20s). Hãy tập trung lắng nghe!`;
                 optContainer.innerHTML = "";
                 feedback.classList.add("hidden");
             } else if (gameState.status === 'answering') {
-                banner.textContent = `⚡ Đang mở 10s bấm đáp án! Ai nhanh & đúng được thưởng điểm!`;
+                banner.textContent = `⚡ Đang mở 20s bấm đáp án! Ai nhanh & đúng được thưởng điểm!`;
                 const q = questions[gameState.currentQuestion];
                 
                 optContainer.innerHTML = "";
@@ -633,9 +634,11 @@
                     const btn = document.createElement("button");
                     const userAnsObj = gameState.answers[selectedStudentClass];
                     const isSelected = userAnsObj && userAnsObj.option === idx;
-                    btn.className = `w-full text-left p-3 rounded-xl border text-xs font-semibold transition cursor-pointer ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-300 ring-2' : 'bg-slate-900/90 border-slate-700 text-slate-200'}`;
+                    btn.type = "button";
+                    btn.className = `w-full text-left p-3 rounded-xl border text-xs font-semibold transition cursor-pointer select-none active:scale-95 ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-300 ring-2' : 'bg-slate-900/90 border-slate-700 text-slate-200'}`;
                     btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt}`;
-                    btn.onclick = () => submitStudentAnswer(idx);
+                    btn.onclick = (e) => { e.preventDefault(); submitStudentAnswer(idx); };
+                    btn.ontouchend = (e) => { e.preventDefault(); submitStudentAnswer(idx); };
                     optContainer.appendChild(btn);
                 });
                 feedback.classList.add("hidden");
@@ -653,7 +656,7 @@
                     feedback.textContent = `❌ Rất tiếc, đáp án đúng là ${String.fromCharCode(65 + q.answer)}`;
                 } else {
                     feedback.className = "p-2.5 rounded-xl text-center text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700";
-                    feedback.textContent = `⏰ Bạn chưa kịp bấm chọn đáp án trong 10s.`;
+                    feedback.textContent = `⏰ Bạn chưa kịp bấm chọn đáp án trong 20s.`;
                 }
             } else if (gameState.status === 'ended') {
                 banner.textContent = "Trò chơi đã kết thúc! Mời xem vinh danh Đại Sứ trên màn hình lớn.";
