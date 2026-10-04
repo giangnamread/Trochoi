@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đấu Trường 12 Lớp Đại Diện - 3 Chìa Khóa Tương Lai (20s + Cloud Sync + QR)</title>
+    <title>Đấu Trường 12 Lớp Đại Diện - 3 Chìa Khóa Tương Lai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -52,13 +52,13 @@
 
     <header class="w-full text-center py-1 flex justify-between items-center px-4 shrink-0">
         <div class="w-36 flex items-center gap-1.5">
-            <button onclick="toggleAudio()" id="audio-btn" title="Bật/Tắt âm thanh đếm ngược" class="bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-slate-600 px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow cursor-pointer">
+            <button onclick="toggleAudio()" id="audio-btn" title="Bật/Tắt âm thanh" class="bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-slate-600 px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow cursor-pointer">
                 🔊 <span id="audio-text">Âm thanh: Bật</span>
             </button>
         </div>
         <div>
             <span class="bg-amber-500/20 text-amber-300 text-[11px] font-semibold px-3 py-0.5 rounded-full uppercase tracking-widest border border-amber-500/30">
-                Đấu Trường 12 Lớp Đại Diện • 20s Đọc & 20s Trả Lời
+                Đấu Trường 12 Lớp Đại Diện • 20s Đọc & 20s Bấm Điện Thoại
             </span>
             <h1 class="text-base md:text-lg font-extrabold mt-0.5 tracking-tight bg-gradient-to-r from-amber-300 via-yellow-200 to-emerald-300 bg-clip-text text-transparent">
                 3 CHÌA KHÓA TƯƠNG LAI
@@ -66,7 +66,7 @@
         </div>
         <div class="w-36 flex justify-end gap-1.5">
             <button onclick="toggleQRModal()" class="bg-emerald-600/80 hover:bg-emerald-500 text-white border border-emerald-500 px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow cursor-pointer" title="Hiển thị mã QR cho học sinh quét">
-                📷 Mã QR
+                📷 QR HS
             </button>
             <button onclick="toggleFullScreen()" id="fs-btn" title="Toàn màn hình" class="bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-slate-600 px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow cursor-pointer">
                 🖥 <span id="fs-text">F11</span>
@@ -84,8 +84,8 @@
                 <div class="w-12 h-12 bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-400/40 text-amber-300 text-lg font-bold shadow-lg animate-pulse">
                     🏆
                 </div>
-                <h2 class="text-lg md:text-xl font-bold mb-1">Phòng Thi Đấu Tốc Độ Đám Mây</h2>
-                <p class="text-xs text-slate-300 mb-3">Học sinh quét mã QR bằng điện thoại để tham gia. Mỗi câu có 20s đọc câu hỏi và 20s bấm trả lời (Càng nhanh điểm thưởng càng cao!).</p>
+                <h2 class="text-lg md:text-xl font-bold mb-1">Phòng Thi Đấu Tốc Độ Đám Mây (12 Lớp)</h2>
+                <p class="text-xs text-slate-300 mb-3">Học sinh dùng điện thoại quét mã QR hoặc bấm nút bên dưới để vào thẳng cổng học sinh làm bài. Mỗi câu có 20s đọc câu hỏi và 20s bấm đáp án!</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 max-h-36 overflow-y-auto p-1 bg-slate-900/60 rounded-xl border border-slate-800" id="preview-classes">
                     <!-- Injected via JS -->
                 </div>
@@ -93,8 +93,8 @@
                     <button onclick="toggleQRModal()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow transition text-xs cursor-pointer">
                         📷 Hiển Thị Mã QR Cho HS Quét
                     </button>
-                    <button onclick="switchToStudentMode()" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-amber-300 border border-amber-500/40 font-bold rounded-xl shadow transition text-xs cursor-pointer">
-                        📱 Chuyển Sang Cổng Học Sinh
+                    <button onclick="switchMode('student')" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-amber-300 border border-amber-500/40 font-bold rounded-xl shadow transition text-xs cursor-pointer">
+                        📱 Mở Giao Diện Học Sinh Ngay
                     </button>
                     <button onclick="startTeacherGame()" class="px-8 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 text-slate-950 font-extrabold rounded-xl shadow-xl transition text-xs tracking-wide cursor-pointer">
                         BẮT ĐẦU ĐẤU TRƯỜNG 🚀
@@ -180,7 +180,7 @@
                 <button onclick="studentJoin()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-extrabold rounded-xl text-xs shadow cursor-pointer mb-2">
                     VÀO PHÒNG THI 🎯
                 </button>
-                <button onclick="switchToTeacherMode()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs cursor-pointer border border-slate-700">
+                <button onclick="switchMode('teacher')" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs cursor-pointer border border-slate-700">
                     ⬅ Quay lại màn hình Giáo viên
                 </button>
             </div>
@@ -210,11 +210,11 @@
     <div id="qr-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="glass-card rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl relative border border-amber-400/40">
             <button onclick="toggleQRModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center cursor-pointer">✕</button>
-            <h3 class="text-base font-bold text-amber-300 mb-1">Mã QR Quét Vào Phòng Thi</h3>
-            <p class="text-[11px] text-slate-300 mb-4">Học sinh mở camera điện thoại quét mã QR dưới đây để tham gia bấm đáp án:</p>
+            <h3 class="text-base font-bold text-amber-300 mb-1">Mã QR Quét Vào Phòng Thi (Học Sinh)</h3>
+            <p class="text-[11px] text-slate-300 mb-4">Học sinh mở camera điện thoại quét mã QR dưới đây để vào thẳng cổng học sinh:</p>
             <div id="qrcode" class="bg-white p-3 rounded-2xl mx-auto inline-block mb-3 shadow-lg"></div>
             <p id="qr-url-text" class="text-[10px] text-indigo-300 break-all bg-slate-900/80 p-2 rounded-xl border border-slate-800 select-all mb-3"></p>
-            <button onclick="switchToStudentMode(); toggleQRModal();" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs cursor-pointer">
+            <button onclick="switchMode('student'); toggleQRModal();" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs cursor-pointer">
                 📱 Vào Cổng Học Sinh Ngay Trên Máy Này
             </button>
         </div>
@@ -225,10 +225,10 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-20s-v3';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'chia-khoa-tuong-lai-speed-20s-v11';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
-        let db, auth, currentUser;
+        let db, auth;
 
         const classesList = [
             { id: "10A", name: "Lớp 10A" },
@@ -262,10 +262,10 @@
 
         let gameState = {
             currentQuestion: 0,
-            status: 'waiting', // waiting, reading (20s), answering (20s), revealed, ended
+            status: 'waiting', 
             timeLeft: 20,
             scores: {},
-            answers: {}, // { classId: { option: idx, time: timestamp } }
+            answers: {}, 
             latestLog: "Đang chờ bắt đầu đấu trường..."
         };
 
@@ -297,7 +297,6 @@
             if (!modal.classList.contains("hidden")) {
                 const baseUrl = window.location.href.split('#')[0];
                 const studentUrl = baseUrl + "#student";
-                document.getElementById("qr-url-textミュニ").textContent = studentUrl;
                 document.getElementById("qr-url-text").textContent = studentUrl;
                 const qrContainer = document.getElementById("qrcode");
                 qrContainer.innerHTML = "";
@@ -312,14 +311,18 @@
             }
         }
 
-        window.switchToStudentMode = function() {
-            window.location.hash = "student";
-            initAppMode();
-        }
-
-        window.switchToTeacherMode = function() {
-            window.location.hash = "";
-            initAppMode();
+        window.switchMode = function(mode) {
+            if (mode === 'student') {
+                document.getElementById("teacher-view").classList.add("hidden");
+                document.getElementById("student-view").classList.remove("hidden");
+                document.getElementById("student-login").classList.remove("hidden");
+                document.getElementById("student-quiz").classList.add("hidden");
+                initStudentPortal();
+            } else {
+                document.getElementById("student-view").classList.add("hidden");
+                document.getElementById("teacher-view").classList.remove("hidden");
+                initTeacherPortal();
+            }
         }
 
         function playBeep(freq = 600, dur = 0.08) {
@@ -342,7 +345,7 @@
         async function initFirebase() {
             try {
                 if (!firebaseConfig.apiKey) {
-                    initAppMode();
+                    initTeacherPortal();
                     return;
                 }
                 const app = initializeApp(firebaseConfig);
@@ -354,22 +357,14 @@
                 } else {
                     await signInAnonymously(auth);
                 }
-                currentUser = auth.currentUser;
-                initAppMode();
-            } catch (e) {
-                initAppMode();
-            }
-        }
 
-        function initAppMode() {
-            if (window.location.hash.includes("student")) {
-                document.getElementById("teacher-view").classList.add("hidden");
-                document.getElementById("student-view").classList.remove("hidden");
-                initStudentPortal();
-            } else {
-                document.getElementById("student-view").classList.add("hidden");
-                document.getElementById("teacher-view").classList.remove("hidden");
-                initTeacherPortal();
+                if (window.location.hash.includes("student")) {
+                    switchMode('student');
+                } else {
+                    switchMode('teacher');
+                }
+            } catch (e) {
+                switchMode('teacher');
             }
         }
 
@@ -385,7 +380,7 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
@@ -411,7 +406,7 @@
 
         async function syncGameState() {
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                 await setDoc(docRef, gameState);
             }
             updateTeacherUI();
@@ -425,7 +420,7 @@
                     if (gameState.timeLeft <= 0) {
                         gameState.status = 'answering';
                         gameState.timeLeft = 20;
-                        gameState.latestLog = "Bắt đầu 20s suy nghĩ và bấm đáp án trên điện thoại!";
+                        gameState.latestLog = "Bắt đầu 20s điện thoại bấm đáp án!";
                     }
                     await syncGameState();
                 } else if (gameState.status === 'answering') {
@@ -591,7 +586,7 @@
             });
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                 onSnapshot(docRef, (snap) => {
                     if (snap.exists()) {
                         gameState = snap.data();
@@ -615,7 +610,7 @@
             if (!selectedStudentClass || gameState.status !== 'answering') return;
 
             if (db) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'gamestate');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                 const timestamp = Date.now();
                 gameState.answers[selectedStudentClass] = { option: optionIdx, time: timestamp };
                 
