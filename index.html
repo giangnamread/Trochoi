@@ -253,7 +253,7 @@
             { q: "Câu 3: Khi gặp một kiến thức hoàn toàn mới, lựa chọn nào phù hợp nhất?", options: ["A. Bỏ qua.", "B. Chờ người khác làm giúp.", "C. Chủ động tìm hiểu, kiểm chứng và vận dụng.", "D. Sao chép ngay câu trả lời trên mạng."], answer: 2 },
             { q: "Câu 4: Điều nào sau đây chưa thể hiện đầy đủ chuyển đổi số?", options: ["A. Ứng dụng công nghệ để nâng cao hiệu quả.", "B. Sử dụng dữ liệu và nền tảng số.", "C. Chỉ mua thật nhiều máy tính và thiết bị.", "D. Thay đổi phương thức làm việc nhờ công nghệ."], answer: 2 },
             { q: "Câu 5: Chuyển đổi số trong học tập có thể là gì?", options: ["A. Sử dụng nền tảng số để học tập, trao đổi và nộp bài.", "B. Chỉ sử dụng điện thoại để giải trí.", "C. Chỉ xem video.", "D. Chỉ dùng máy tính để chơi game."], answer: 0 },
-            { q: "Câu 6: Một kỹ năng số rất quan trọng đối với học sinh là:", options: ["A. Tìm kiếm, đánh giá, kiểm chứng và sử dụng thông tin.", "B. Biết sử dụng càng nhiều mạng xã hội càng tốt.", "C. Sao chép thông tin thật nhanh.", "D. Tin tất cả những gì xuất hiện trên Internet."], answer: 0 },
+            { q: "Câu 6: Một kỹ năng số rất quan trọng đối với học sinh là:", options: ["A. Tìm kiếm, đánh giá, kiểm chứng và sử dụng thông tin.", "B. Biết sử dụng càng nhiều mạng xã hội càng tốt.", "C. Sao chép thông tin thật nhanh.", "D. Tin tất cả các xuất hiện trên Internet."], answer: 0 },
             { q: "Câu 7: AI là viết tắt của cụm từ nào?", options: ["A. Artificial Intelligence.", "B. Automatic Internet.", "C. Advanced Information.", "D. Artificial Internet."], answer: 0 },
             { q: "Câu 8: AI có thể hỗ trợ học sinh như thế nào?", options: ["A. Giải thích kiến thức khó.", "B. Gợi ý ý tưởng.", "C. Hỗ trợ cá nhân hóa việc học.", "D. Tất cả các đáp án trên."], answer: 3 },
             { q: "Câu 9: Khi AI cung cấp một thông tin quan trọng, chúng ta nên:", options: ["A. Tin ngay.", "B. Sao chép ngay.", "C. Kiểm tra và đối chiếu với nguồn đáng tin cậy.", "D. Không cần kiểm chứng."], answer: 2 },
@@ -299,7 +299,6 @@
             if (!modal.classList.contains("hidden")) {
                 const baseUrl = window.location.href.split('#')[0];
                 const studentUrl = baseUrl + "#student";
-                document.getElementById("qr-url-text انعكاس").textContent = studentUrl;
                 document.getElementById("qr-url-text").textContent = studentUrl;
                 
                 // Draw pure SVG QR placeholder that works offline and online without external image dependency
@@ -354,7 +353,7 @@
         async function initFirebase() {
             try {
                 if (!firebaseConfig.apiKey) {
-                    initTeacherPortal();
+                    switchMode('teacher');
                     return;
                 }
                 const app = initializeApp(firebaseConfig);
